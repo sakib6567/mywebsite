@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Embrowned Lilac - Travel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        .dark-mode {
+            background-color: #1f2937;
+            color: #e5e7eb;
+        }
+        .dark-mode .bg-white { background-color: #374151; }
+        .dark-mode .text-gray-700 { color: #d1d5db; }
+        .dark-mode .bg-gray-100 { background-color: #111827; }
+        .dark-mode .bg-blue-600 { background-color: #1d4ed8; }
+        .dark-mode .text-gray-500 { color: #9ca3af; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans transition-colors duration-300">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-600 text-white py-4 sticky top-0 z-10 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">The Embrowned Lilac</h1>
+            <ul class="flex space-x-6">
+                <li><a href="index.html" class="hover:underline">Home</a></li>
+                <li><a href="about.html" class="hover:underline">About Me</a></li>
+                <li><a href="tech.html" class="hover:underline">Tech</a></li>
+                <li><a href="travel.html" class="hover:underline">Travel</a></li>
+                <li><a href="books.html" class="hover:underline">Books</a></li>
+                <li><a href="reviews.html" class="hover:underline">Reviews</a></li>
+                <li><a href="contact.html" class="hover:underline">Contact</a></li>
+            </ul>
+            <button id="darkModeToggle" class="bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300">Toggle Dark Mode</button>
+        </div>
+    </nav>
+
+    <!-- Search Bar -->
+    <section class="max-w-4xl mx-auto py-4 px-4">
+        <input id="searchBar" type="text" placeholder="Search travel posts..." class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600">
+    </section>
+
+    <!-- Travel Posts Section -->
+    <section class="max-w-4xl mx-auto py-8 px-4">
+        <h2 class="text-3xl font-semibold mb-6 text-center" data-aos="fade-up">Travel Stories</h2>
+        <div id="blogPosts" class="space-y-8">
+            <article class="bg-white p-6 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300" data-category="travel" data-aos="fade-up">
+                <img src="https://images.unsplash.com/photo-1612722432476-b875e7b06d20?q=80&w=300" alt="Northern Lights Reykjavik" class="w-full h-48 object-cover rounded mb-4">
+                <h3 class="text-2xl font-bold mb-2">Dancing Lights in Reykjavik</h3>
+                <p class="text-gray-500 text-sm mb-4">Posted on July 15, 2025</p>
+                <p class="text-gray-700">On a chilly night in Reykjavik, I chased the Northern Lights. The sky was a canvas of stars, and suddenly, green ribbons danced above the snowy hills.</p>
+                <img src="https://images.unsplash.com/photo-1601049315355-3a9c60c27e1b?q=80&w=300" alt="Aurora Glow" class="my-4 mx-auto rounded-lg w-full max-w-md object-cover">
+                <p class="text-gray-700">My breath caught as the aurora swirled, painting the night with an ethereal glow. A local guide shared tales of Viking spirits, adding magic to the moment. I sipped hot cocoa from a thermos, feeling small yet connected to the universe. The tour took us to a remote hill, far from city lights, where the aurora was brightest. I learned to use a slow shutter speed to capture photos, a skill I’ll carry to future adventures. Reykjavik’s charm lies in its blend of nature and myth. <strong>Tip:</strong> Book a guided tour for the best aurora spots, dress warmly, and check aurora forecasts online.</p>
+                <div class="comment-section mt-4">
+                    <h4 class="text-lg font-semibold">Comments</h4>
+                    <div class="comments-list"></div>
+                    <textarea class="w-full p-2 border rounded mt-2" placeholder="Add a comment..."></textarea>
+                    <button class="add-comment bg-blue-600 text-white px-4 py-2 rounded mt-2 hover:bg-blue-700">Post Comment</button>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4">
+        <p>© 2025 The Embrowned Lilac. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        });
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+        const searchBar = document.getElementById('searchBar');
+        const blogPosts = document.getElementById('blogPosts').children;
+        searchBar.addEventListener('input', () => {
+            const query = searchBar.value.toLowerCase();
+            Array.from(blogPosts).forEach(post => {
+                const title = post.querySelector('h3').textContent.toLowerCase();
+                const content = post.querySelector('p.text-gray-700').textContent.toLowerCase();
+                post.style.display = title.includes(query) || content.includes(query) ? '' : 'none';
+            });
+        });
+        document.querySelectorAll('.add-comment').forEach(button => {
+            button.addEventListener('click', () => {
+                const textarea = button.previousElementSibling;
+                const comment = textarea.value.trim();
+                if (comment) {
+                    const commentList = button.parentElement.querySelector('.comments-list');
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'text-gray-700 mt-2';
+                    commentDiv.textContent = comment;
+                    commentList.appendChild(commentDiv);
+                    textarea.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

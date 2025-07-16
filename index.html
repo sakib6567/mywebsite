@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Embrowned Lilac - Home</title>
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Google Fonts Links -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&family=Sacramento&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base styles and custom animations */
+        body {
+            /* Applied Roboto for body text */
+            font-family: 'Roboto', sans-serif;
+            transition-property: color, background-color, border-color;
+            transition-duration: 300ms;
+            background-color: #f3f4f6; /* Default light gray background */
+        }
+
+        /* Headings Font Style (Playfair Display) */
+        h1, h2, h3 {
+            /* Applied Playfair Display for general headings */
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Hero Section Styling */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* Full viewport height */
+            background: #4b5563 url('purple-tree.jpg') no-repeat center center/cover; /* Local purple tree image */
+            overflow: hidden;
+            /* Faint lilac flower pattern overlay */
+            background-image: radial-gradient(circle, rgba(167, 139, 250, 0.2) 2px, transparent 2px), url('purple-tree.jpg');
+            background-size: 20px 20px, cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Petal Animation Styling */
+        .petal {
+            position: absolute;
+            background-color: #a78bfa; /* Vibrant lilac purple */
+            border-radius: 50% 50% 20% 20%; /* Petal-like shape */
+            opacity: 0.8;
+            animation: fancy-fall linear infinite;
+            z-index: 2; /* Above background image */
+        }
+        /* 12 petals with varied sizes, speeds, and sway */
+        .petal:nth-child(1) { left: 5%; animation-duration: 5s; animation-delay: 0s; width: 10px; height: 20px; transform: translateX(-10px); }
+        .petal:nth-child(2) { left: 15%; animation-duration: 6s; animation-delay: 0.5s; width: 14px; height: 28px; transform: translateX(15px); }
+        .petal:nth-child(3) { left: 25%; animation-duration: 4.5s; animation-delay: 1s; width: 12px; height: 24px; transform: translateX(-20px); }
+        .petal:nth-child(4) { left: 35%; animation-duration: 5.5s; animation-delay: 1.5s; width: 10px; height: 20px; transform: translateX(10px); }
+        .petal:nth-child(5) { left: 45%; animation-duration: 6.5s; animation-delay: 2s; width: 15px; height: 30px; transform: translateX(-15px); }
+        .petal:nth-child(6) { left: 55%; animation-duration: 5s; animation-delay: 2.5s; width: 11px; height: 22px; transform: translateX(20px); }
+        .petal:nth-child(7) { left: 65%; animation-duration: 6s; animation-delay: 3s; width: 13px; height: 26px; transform: translateX(-10px); }
+        .petal:nth-child(8) { left: 75%; animation-duration: 4.8s; animation-delay: 3.5s; width: 10px; height: 20px; transform: translateX(15px); }
+        .petal:nth-child(9) { left: 85%; animation-duration: 5.2s; animation-delay: 4s; width: 14px; height: 28px; transform: translateX(-20px); }
+        .petal:nth-child(10) { left: 95%; animation-duration: 6s; animation-delay: 4.5s; width: 12px; height: 24px; transform: translateX(10px); }
+        .petal:nth-child(11) { left: 20%; animation-duration: 5.5s; animation-delay: 5s; width: 11px; height: 22px; transform: translateX(-15px); }
+        .petal:nth-child(12) { left: 80%; animation-duration: 5s; animation-delay: 5.5s; width: 13px; height: 26px; transform: translateX(20px); }
+        @keyframes fancy-fall {
+            0% {
+                transform: translateY(-30px) rotate(0deg) scale(1);
+                background-color: #a78bfa; /* Start purple */
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg) scale(1.3); /* Sway and grow */
+                background-color: #c7a4ff; /* Mid-tone purple */
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg) scale(0.9); /* Sway back and shrink */
+                background-color: #8b5a2b; /* Browned hue */
+                opacity: 0;
+            }
+        }
+
+        /* Hero Text Styling */
+        .hero-text {
+            position: relative;
+            z-index: 3; /* Above petals and background */
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.9); /* Stronger shadow for readability */
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for text */
+            padding: 20px;
+            border-radius: 10px;
+        }
+        /* Main Hero Title Font Style (Dancing Script) */
+        .hero-text h1 {
+            font-family: 'Dancing Script', cursive;
+        }
+        @keyframes text-appear {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Navigation Link Styling (Sacramento) */
+        .nav-link {
+            color: #f3e8ff; /* Light purple for contrast */
+            transition: color 0.3s;
+            /* Applied Sacramento for navigation links */
+            font-family: 'Sacramento', cursive;
+            font-size: 1.5rem; /* Increased font size for clarity */
+            font-weight: 700; /* Attempt to make it bolder */
+            text-decoration: none; /* Ensure no underline */
+        }
+        .nav-link:hover {
+            color: #d8b4fe; /* Lighter purple on hover */
+            text-decoration: none; /* Explicitly remove underline on hover */
+        }
+
+        /* Dark Mode Toggle Button Styling */
+        #darkModeToggle {
+            padding: 0.25rem 0.5rem; /* Reduced padding (px-2 py-1 equivalent) */
+            font-size: 0.875rem; /* Smaller font size (text-sm equivalent) */
+        }
+
+        /* Dark Mode Styling */
+        .dark-mode {
+            background-color: #1f2937;
+            color: #e5e7eb;
+        }
+        .dark-mode .bg-white { background-color: #374151; }
+        .dark-mode .text-gray-700 { color: #d1d5db; }
+        .dark-mode .bg-gray-100 { background-color: #111827; }
+        .dark-mode .bg-gray-200 { background-color: #1f2937; }
+        .dark-mode .bg-blue-600 { background-color: #1d4ed8; }
+        .dark-mode .text-gray-500 { color: #9ca3af; }
+        .dark-mode .bg-purple-600 { background-color: #4c1d95; } /* Darker purple for dark mode nav */
+        .hidden { display: none; }
+
+        /* Tailwind utility classes (copied from your styles.css for self-containment) */
+        .bg-purple-600 { background-color: #6b46c1; }
+        .text-white { color: #ffffff; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .sticky { position: sticky; }
+        .top-0 { top: 0; }
+        .z-10 { z-index: 10; }
+        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .max-w-6xl { max-width: 72rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .font-bold { font-weight: 700; }
+        .space-x-6 > * + * { margin-left: 1.5rem; }
+        .hover\:underline:hover { text-decoration: underline; } /* Kept this for other elements that might use it */
+        .bg-gray-200 { background-color: #e5e7eb; }
+        .text-gray-800 { color: #1f2937; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .rounded { border-radius: 0.25rem; }
+        .hover\:bg-gray-300:hover { background-color: #d1d5db; }
+        .text-center { text-align: center; }
+        .py-24 { padding-top: 6rem; padding-bottom: 6rem; }
+        .text-5xl { font-size: 3rem; line-height: 1; }
+        .mb-4 { margin-bottom: 1rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .max-w-2xl { max-width: 42rem; }
+        .bg-gray-100 { background-color: #f3f4f6; }
+        .font-sans { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
+        .transition-colors { transition-property: color, background-color, border-color; }
+        .duration-300 { transition-duration: 300ms; }
+        .p-3 { padding: 0.75rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .border { border-width: 1px; }
+        .border-gray-300 { border-color: #d1d5db; }
+        .focus\:outline-none:focus { outline: none; }
+        .focus\:ring-2:focus { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05); }
+        .focus\:ring-blue-600:focus { box-shadow: 0 0 0 2px #2563eb; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .font-semibold { font-weight: 600; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .gap-6 { gap: 1.5rem; }
+        .bg-white { background-color: #ffffff; }
+        .p-6 { padding: 1.5rem; }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .transform { transform: translate(0, 0); }
+        .hover\:scale-105:hover { transform: scale(1.05); }
+        .transition-transform { transition-property: transform; }
+        .w-full { width: 100%; }
+        .h-48 { height: 12rem; }
+        .object-cover { object-fit: cover; }
+        .text-gray-500 { color: #6b7280; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-gray-700 { color: #374151; }
+        .text-blue-600 { color: #2563eb; }
+        .mt-4 { margin-top: 1rem; }
+        .inline-block { display: inline-block; }
+        .bg-gray-800 { background-color: #1f2937; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans transition-colors duration-300">
+    <!-- Navigation Bar -->
+    <nav class="bg-purple-600 text-white py-4 sticky top-0 z-10 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">The Embrowned Lilac</h1>
+            <ul class="flex space-x-6">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About Me</a></li>
+                <li><a href="tech.html" class="nav-link">Tech</a></li>
+                <li><a href="travel.html" class="nav-link">Travel</a></li>
+                <li><a href="books.html" class="nav-link">Books</a></li>
+                <li><a href="reviews.html" class="nav-link">Reviews</a></li>
+                <!-- Removed Contact link -->
+            </ul>
+            <button id="darkModeToggle" class="bg-gray-200 text-gray-800 px-2 py-0.5 rounded hover:bg-gray-300 text-sm">Toggle Dark Mode</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Full-Screen Local Purple Tree Image and Petals -->
+    <section id="home" class="hero-container text-white text-center">
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="hero-text">
+            <!-- Main Hero Title (Dancing Script) -->
+            <h1 class="text-5xl font-bold mb-4" data-aos="fade-up">Welcome to The Embrowned Lilac</h1>
+            <p class="text-xl max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">A place where thoughts bloom and stories unfold, like a lilac gently browning.</p>
+        </div>
+    </section>
+
+    <!-- Search Bar -->
+    <section class="max-w-4xl mx-auto py-4 px-4">
+        <input id="searchBar" type="text" placeholder="Search posts..." class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600">
+    </section>
+
+    <!-- Featured Posts Section -->
+    <section class="max-w-4xl mx-auto py-8 px-4">
+        <h2 class="text-3xl font-semibold mb-6 text-center" data-aos="fade-up">Featured Posts</h2>
+        <div id="blogPosts" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <article class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" data-category="tech" data-aos="fade-up">
+                <img src="https://via.placeholder.com/150" alt="Tech Post" class="w-full h-48 object-cover rounded mb-4">
+                <h3 class="text-2xl font-bold mb-2">Exploring New Tech Trends</h3>
+                <p class="text-gray-500 text-sm mb-4">Posted on July 14, 2025</p>
+                <p class="text-gray-700">Discovering the latest in AI and web development is thrilling! Here's what I learned this week...</p>
+                <a href="tech.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+            </article>
+            <article class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" data-category="travel" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://via.placeholder.com/150" alt="Travel Post" class="w-full h-48 object-cover rounded mb-4">
+                <h3 class="text-2xl font-bold mb-2">A Journey Through the Mountains</h3>
+                <p class="text-gray-500 text-sm mb-4">Posted on July 10, 2025</p>
+                <p class="text-gray-700">Exploring serene landscapes and hidden trails was unforgettable. Join me on this adventure!</p>
+                <a href="travel.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+            </article>
+            <article class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" data-category="books" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://via.placeholder.com/150" alt="Books Post" class="w-full h-48 object-cover rounded mb-4">
+                <h3 class="text-2xl font-bold mb-2">Must-Read Novels of 2025</h3>
+                <p class="text-gray-500 text-sm mb-4">Posted on July 5, 2025</p>
+                <p class="text-gray-700">These books captured my heart this year. Dive into my top picks for 2025!</p>
+                <a href="books.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+            </article>
+        </div>
+    </section>
+
+    <!-- Analytics Dashboard -->
+    <section class="max-w-4xl mx-auto py-8 px-4">
+        <h2 class="text-3xl font-semibold mb-6 text-center" data-aos="fade-up">Blog Analytics</h2>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <p class="text-gray-700">Total Posts: <span id="totalPosts">3</span></p>
+            <p class="text-gray-700">Most Popular Category: <span id="popularCategory">Tech</span></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4">
+        <p>© 2025 The Embrowned Lilac. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        });
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+        const searchBar = document.getElementById('searchBar');
+        const blogPosts = document.getElementById('blogPosts').children;
+        searchBar.addEventListener('input', () => {
+            const query = searchBar.value.toLowerCase();
+            Array.from(blogPosts).forEach(post => {
+                const title = post.querySelector('h3').textContent.toLowerCase();
+                const content = post.querySelector('p.text-gray-700').textContent.toLowerCase();
+                post.style.display = title.includes(query) || content.includes(query) ? '' : 'none';
+            });
+        });
+        function updateAnalytics() {
+            document.getElementById('totalPosts').textContent = document.querySelectorAll('#blogPosts article').length;
+        }
+        updateAnalytics();
+    </script>
+</body>
+</html>
