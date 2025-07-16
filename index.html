@@ -120,9 +120,14 @@
             font-family: 'Sacramento', cursive;
             font-weight: 700; /* Attempt to make it bolder */
             text-decoration: none; /* Ensure no underline */
-            font-size: 1.2rem; /* Default size for very small screens */
+            font-size: 1.1rem; /* Even smaller default size for very small screens */
         }
         /* Responsive font sizes for nav links */
+        @media (min-width: 480px) { /* Extra small breakpoint for very narrow phones */
+            .nav-link {
+                font-size: 1.2rem;
+            }
+        }
         @media (min-width: 640px) { /* sm breakpoint */
             .nav-link {
                 font-size: 1.35rem;
@@ -142,6 +147,8 @@
         #darkModeToggle {
             padding: 0.25rem 0.5rem; /* Reduced padding (px-2 py-1 equivalent) */
             font-size: 0.875rem; /* Smaller font size (text-sm equivalent) */
+            /* Ensure it doesn't wrap or push other content */
+            flex-shrink: 0;
         }
 
         /* Dark Mode Styling */
@@ -231,7 +238,7 @@
             <!-- Responsive font size for nav title -->
             <h1 class="text-xl sm:text-2xl font-bold">The Embrowned Lilac</h1>
             <!-- Responsive spacing for nav links -->
-            <ul class="flex space-x-2 sm:space-x-4 md:space-x-6">
+            <ul class="flex space-x-1 sm:space-x-4 md:space-x-6">
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="about.html" class="nav-link">About Me</a></li>
                 <li><a href="tech.html" class="nav-link">Tech</a></li>
