@@ -15,6 +15,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&family=Sacramento&display=swap" rel="stylesheet">
 
     <style>
+        /* Global box-sizing for consistent width calculations */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* Prevent horizontal scrolling on the entire page */
+        html, body {
+            overflow-x: hidden;
+        }
+
         /* Base styles and custom animations */
         body {
             /* Applied Roboto for body text */
@@ -33,10 +43,10 @@
         /* Hero Section Styling */
         .hero-container {
             position: relative;
-            width: 100%;
+            width: 100%; /* Ensure it's 100% of parent, not viewport width (vw can sometimes cause issues) */
             height: 100vh; /* Full viewport height */
             background: #4b5563 url('purple-tree.jpg') no-repeat center center/cover; /* Local purple tree image */
-            overflow: hidden;
+            overflow: hidden; /* Hide any internal overflow */
             /* Faint lilac flower pattern overlay */
             background-image: radial-gradient(circle, rgba(167, 139, 250, 0.2) 2px, transparent 2px), url('purple-tree.jpg');
             background-size: 20px 20px, cover;
@@ -218,6 +228,7 @@
                 <li><a href="reviews.html" class="nav-link">Reviews</a></li>
                 <!-- Removed Contact link -->
             </ul>
+            <!-- Dark Mode Toggle Button: Adjusted padding and font size directly with Tailwind classes -->
             <button id="darkModeToggle" class="bg-gray-200 text-gray-800 px-2 py-0.5 rounded hover:bg-gray-300 text-sm">Toggle Dark Mode</button>
         </div>
     </nav>
