@@ -23,25 +23,126 @@
         /* Prevent horizontal scrolling on the entire page */
         html, body {
             overflow-x: hidden;
-            scroll-behavior: smooth; /* Ensure smooth scrolling for "Back to Top" */
+            scroll-behavior: smooth; /* Smooth scrolling for "Back to Top" */
+            height: 100%; /* Ensure body takes full height for overlay */
         }
 
-        /* Base styles and custom animations for body background */
+        /* Base styles for body background - static, gentle gradient */
         body {
             font-family: 'Roboto', sans-serif;
             transition-property: color, background-color, border-color;
             transition-duration: 300ms;
-            /* Subtle animated background gradient */
             background: linear-gradient(-45deg, #f3f4f6, #e0e7ff, #ede9fe, #f3f4f6);
-            background-size: 400% 400%; /* Larger background size for animation */
-            animation: background-gradient-animation 15s ease infinite alternate;
+            background-size: 100% 100%;
+            position: relative;
         }
 
-        /* Keyframes for the subtle background gradient animation */
-        @keyframes background-gradient-animation {
-            0% { background-position: 0% 50%, 100% 50%; }
-            50% { background-position: 100% 50%, 50% 50%; }
-            100% { background-position: 0% 50%, 100% 50%; }
+        /* Styles for the full-screen cloud overlay - Added 3D context */
+        #cloud-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to bottom right, #e0e7ff, #a78bfa); /* Soft purple-blue gradient */
+            z-index: 9999; /* Ensure it's on top of everything */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Hide cloud overflow */
+            pointer-events: all; /* Allow interaction */
+            transition: opacity 2s ease-out; /* Smooth fade out */
+            cursor: pointer; /* Indicate it's clickable */
+            perspective: 1200px; /* Increased perspective for stronger 3D effect */
+            transform-style: preserve-3d; /* Ensure children are rendered in 3D space */
+        }
+
+        /* Keyframes for individual cloud drifting - Enhanced for more natural 3D movement */
+        @keyframes cloud-drift {
+            0% { transform: translate(-100%, 0) scale(1) translateZ(-400px); opacity: 0.8; } /* Start further back */
+            25% { transform: translate(-50%, 5%) scale(1.05) translateZ(0px); opacity: 0.85; } /* Move slightly forward */
+            50% { transform: translate(0%, 10%) scale(1.1) translateZ(400px); opacity: 0.9; } /* Move closer */
+            75% { transform: translate(50%, 5%) scale(1.05) translateZ(0px); opacity: 0.85; } /* Move slightly backward */
+            100% { transform: translate(100%, 0) scale(1) translateZ(-400px); opacity: 0.8; } /* End further back */
+        }
+
+        /* Styles for individual cloud items - IMPROVED APPEARANCE (Thicker, more conspicuous, with shadow) */
+        .cloud-item {
+            position: absolute;
+            /* More complex radial gradient for a cloud-like look */
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0.5) 70%, transparent 100%);
+            border-radius: 50% 60% 40% 50% / 60% 50% 50% 40%; /* More organic, less perfect circle */
+            filter: blur(90px); /* Increased blur for softness and thickness */
+            animation: cloud-drift cubic-bezier(0.4, 0, 0.6, 1) infinite; /* Changed to cubic-bezier for smoother movement */
+            pointer-events: none; /* Don't block clicks/touches on clouds themselves */
+            opacity: 0.95; /* Slightly higher base opacity */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Subtle shadow for 3D depth */
+            border: 2px dashed red; /* TEMPORARY: For debugging 3D effect */
+        }
+        /* Updated sizes for thicker appearance */
+        .cloud-item:nth-child(1) { width: 750px; height: 500px; top: 10%; left: -20%; animation-duration: 45s; animation-delay: 0s; }
+        .cloud-item:nth-child(2) { width: 850px; height: 550px; top: 50%; left: -50%; animation-duration: 55s; animation-delay: 10s; }
+        .cloud-item:nth-child(3) { width: 650px; height: 450px; top: 70%; left: 10%; animation-duration: 40s; animation-delay: 5s; }
+        .cloud-item:nth-child(4) { width: 800px; height: 520px; top: 20%; left: 80%; animation-duration: 50s; animation-delay: 20s; }
+        .cloud-item:nth-child(5) { width: 730px; height: 480px; top: -10%; left: 40%; animation-duration: 43s; animation-delay: 15s; }
+
+        /* Class to trigger cloud fade-out */
+        #cloud-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none; /* Disable interaction once fading */
+        }
+
+        /* Styles for the main content wrapper (initially hidden) */
+        #main-content {
+            opacity: 0; /* Start invisible */
+            pointer-events: none; /* Start non-interactive */
+            transition: opacity 1.5s ease-in; /* Smooth fade-in */
+            position: relative;
+            z-index: 1;
+            min-height: 100vh; /* Ensure it takes full height */
+            width: 100vw;
+        }
+
+        /* Removed debugging styles for blog posts container */
+        #blogPosts {
+            /* background-color: orange; */
+            /* border: 5px solid purple; */
+            /* min-height: 300px; */
+        }
+
+        /* Forced visibility styles for featured post cards */
+        .featured-post-card {
+            display: block !important; /* Force display block */
+            visibility: visible !important; /* Force visibility */
+            min-height: 250px; /* Ensure it has a minimum height */
+            width: 100%; /* Ensure it takes full width in its grid cell */
+            background-color: #ffffff; /* Explicitly set background to white */
+            border-radius: 0.5rem; /* Re-apply original Tailwind rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Re-apply original Tailwind shadow-lg */
+            padding: 1.5rem; /* Re-apply original Tailwind p-6 */
+            transform: translate(0, 0); /* Reset any AOS transforms */
+            transition: all 0.3s ease-in-out; /* Keep original transition for hover */
+        }
+
+        /* Keyframes for petal burst */
+        @keyframes petal-burst {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; } /* Burst outwards and fade */
+        }
+
+        /* Keyframes for petal fall after burst */
+        @keyframes petal-fall-after-burst {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Styles for dynamically created burst petals */
+        .burst-petal {
+            position: fixed; /* Fixed to viewport */
+            background-color: rgba(220, 180, 255, 0.8); /* Light lilac */
+            border-radius: 50% 50% 20% 20%;
+            pointer-events: none;
+            z-index: 9998; /* Below clouds, above main content */
         }
 
         /* Headings Font Style (Playfair Display) */
@@ -60,30 +161,27 @@
             justify-content: center;
         }
 
-        /* Parallax Background Layer */
+        /* Parallax Background Layer - Removed the radial-gradient (circles) */
         .parallax-bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            /* Only the purple-tree.jpg image now */
             background: #4b5563 url('purple-tree.jpg') no-repeat center center/cover;
-            /* Faint lilac flower pattern overlay */
-            background-image: radial-gradient(circle, rgba(167, 139, 250, 0.2) 2px, transparent 2px), url('purple-tree.jpg');
-            background-size: 20px 20px, cover;
-            /* This is the magic for parallax: fixed background attachment */
-            background-attachment: fixed;
+            background-attachment: fixed; /* This is the magic for parallax: fixed background attachment */
             z-index: 1; /* Below text, above nothing */
         }
 
-        /* NEW: Animation for "The Embrowned Lilac" text color browning */
+        /* Animation for "The Embrowned Lilac" text color browning */
         @keyframes lilac-browning-animation {
             0% { color: #ffffff; } /* Start white */
             50% { color: #a78bfa; } /* Mid-tone lilac, vibrant purple */
             100% { color: #6F4E37; } /* End a more distinct brown */
         }
 
-        /* NEW: Animation for petal background color browning */
+        /* Animation for petal background color browning */
         @keyframes petal-browning-animation {
             0% { background-color: #a78bfa; } /* Initial lilac for petals */
             50% { background-color: #c7a4ff; } /* Mid-tone lilac for petals */
@@ -91,7 +189,7 @@
         }
 
 
-        /* Petal Animation Styling (for static petals) */
+        /* Petal Animation Styling (for static petals in hero) */
         .petal {
             position: absolute;
             border-radius: 50% 50% 20% 20%; /* Petal-like shape */
@@ -166,12 +264,13 @@
         /* Navigation Link Styling (Sacramento) */
         .nav-link {
             color: #f3e8ff; /* Light purple for contrast */
-            transition: color 0.3s;
+            transition: color 0.3s, transform 0.2s ease-out; /* Add transform to transition */
             font-family: 'Sacramento', cursive;
             font-weight: 700; /* Attempt to make it bolder */
             text-decoration: none; /* Ensure no underline */
             font-size: 1.1rem; /* Even smaller default size for very small screens */
-            position: relative; /* Needed for ::after positioning */
+            position: relative; /* Needed for ::after positioning and petal bursts */
+            display: inline-block; /* Needed for transform to work correctly */
         }
         /* Responsive font sizes for nav links */
         @media (min-width: 480px) { /* Extra small breakpoint for very narrow phones */
@@ -189,10 +288,23 @@
                 font-size: 1.5rem; /* Original size on md and larger screens */
             }
         }
-        .nav-link:hover {
+        /* Nav Link Hover/Active Effects */
+        .nav-link:hover,
+        .nav-link:focus { /* Focus for keyboard navigation */
             color: #d8b4fe; /* Lighter purple on hover */
+            transform: translateY(-3px); /* Slight bounce/lift */
             text-decoration: none; /* Explicitly remove underline on hover */
         }
+        /* Nav Link Click/Touch Color Burst */
+        .nav-link.clicked-effect {
+            animation: nav-link-color-burst 0.5s ease-out forwards;
+        }
+        @keyframes nav-link-color-burst {
+            0% { color: #f3e8ff; text-shadow: none; }
+            50% { color: #fff; text-shadow: 0 0 10px #d8b4fe, 0 0 20px #a78bfa; } /* Bright glow */
+            100% { color: #d8b4fe; text-shadow: none; }
+        }
+
 
         /* Active Navigation Link Indicator */
         .nav-link::after {
@@ -312,114 +424,146 @@
             pointer-events: none; /* Allow cursor to pass through */
             /* Animation properties will be set by JavaScript */
         }
+
+        /* Styles and Keyframes for Nav Link Burst Petals */
+        @keyframes nav-burst-petal-animation {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--burst-x), var(--burst-y)) scale(0.2) rotate(var(--burst-rotate));
+                opacity: 0;
+            }
+        }
+        .nav-burst-petal {
+            position: absolute;
+            background-color: #a78bfa; /* Consistent lilac color for burst */
+            border-radius: 50% 50% 20% 20%;
+            pointer-events: none;
+            z-index: 5; /* Above nav links */
+            animation: nav-burst-petal-animation 0.8s ease-out forwards; /* Fast burst */
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans transition-colors duration-300">
-    <!-- Navigation Bar -->
-    <nav class="bg-purple-600 text-white py-4 sticky top-0 z-10 shadow-md">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
-            <!-- Responsive font size for nav title -->
-            <h1 class="text-xl sm:text-2xl font-bold">The Embrowned Lilac</h1>
-            <!-- Responsive spacing for nav links -->
-            <ul class="flex space-x-1 sm:space-x-4 md:space-x-6">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="about.html" class="nav-link">About Me</a></li>
-                <li><a href="tech.html" class="nav-link">Tech</a></li>
-                <li><a href="travel.html" class="nav-link">Travel</a></li>
-                <li><a href="books.html" class="nav-link">Books</a></li>
-                <li><a href="reviews.html" class="nav-link">Reviews</a></li>
-                <!-- Removed Contact link -->
-            </ul>
-            <!-- Dark Mode Toggle Button: Adjusted padding and font size directly with Tailwind classes -->
-            <button id="darkModeToggle" class="bg-gray-200 text-gray-800 px-2 py-0.5 rounded hover:bg-gray-300 text-sm">Toggle Dark Mode</button>
-        </div>
-    </nav>
+    <!-- NEW: Full-screen Cloud Overlay -->
+    <div id="cloud-overlay">
+        <div class="cloud-item"></div>
+        <div class="cloud-item"></div>
+        <div class="cloud-item"></div>
+        <div class="cloud-item"></div>
+        <div class="cloud-item"></div>
+    </div>
 
-    <!-- Hero Section with Full-Screen Local Purple Tree Image and Petals -->
-    <section id="home" class="hero-container text-white text-center">
-        <div class="parallax-bg"></div> <!-- Parallax background layer -->
-        <!-- Static Petals (increased to 20) -->
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="petal"></div>
-        <div class="hero-text">
-            <!-- Main Hero Title (Dancing Script) -->
-            <h1 class="text-5xl font-bold mb-4" data-aos="fade-up">Welcome to <span class="lilac-browning">The Embrowned Lilac</span></h1>
-            <p class="text-xl max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">A place where thoughts bloom and stories unfold, like a lilac gently browning.</p>
-        </div>
-    </section>
+    <!-- NEW: Main content wrapper - initially hidden -->
+    <div id="main-content">
+        <!-- Navigation Bar -->
+        <nav class="bg-purple-600 text-white py-4 sticky top-0 z-10 shadow-md">
+            <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+                <!-- Responsive font size for nav title -->
+                <h1 class="text-xl sm:text-2xl font-bold">The Embrowned Lilac</h1>
+                <!-- Responsive spacing for nav links -->
+                <ul class="flex space-x-1 sm:space-x-4 md:space-x-6">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About Me</a></li>
+                    <li><a href="tech.html" class="nav-link">Tech</a></li>
+                    <li><a href="travel.html" class="nav-link">Travel</a></li>
+                    <li><a href="books.html" class="nav-link">Books</a></li>
+                    <li><a href="reviews.html" class="nav-link">Reviews</a></li>
+                    <!-- Removed Contact link -->
+                </ul>
+                <!-- Dark Mode Toggle Button: Adjusted padding and font size directly with Tailwind classes -->
+                <button id="darkModeToggle" class="bg-gray-200 text-gray-800 px-2 py-0.5 rounded hover:bg-gray-300 text-sm">Toggle Dark Mode</button>
+            </div>
+        </nav>
 
-    <!-- Search Bar -->
-    <section class="max-w-4xl mx-auto py-4 px-4">
-        <input id="searchBar" type="text" placeholder="Search posts..." class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600">
-    </section>
+        <!-- Hero Section with Full-Screen Local Purple Tree Image and Petals -->
+        <section id="home" class="hero-container text-white text-center">
+            <div class="parallax-bg"></div> <!-- Parallax background layer -->
+            <!-- Static Petals (increased to 20) -->
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="hero-text">
+                <!-- Main Hero Title (Dancing Script) -->
+                <h1 class="text-5xl font-bold mb-4" data-aos="fade-up">Welcome to <span class="lilac-browning">The Embrowned Lilac</span></h1>
+                <p class="text-xl max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">A place where thoughts bloom and stories unfold, like a lilac gently browning.</p>
+            </div>
+        </section>
 
-    <!-- Featured Posts Section -->
-    <section class="max-w-4xl mx-auto py-8 px-4">
-        <h2 class="text-3xl font-semibold mb-6 text-center" data-aos="fade-up">Featured Posts</h2>
-        <div id="blogPosts" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="tech" data-aos="fade-up">
-                <img src="https://via.placeholder.com/150" alt="Tech Post" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
-                <h3 class="text-2xl font-bold mb-2">Exploring New Tech Trends</h3>
-                <p class="text-gray-500 text-sm mb-4">Posted on July 14, 2025</p>
-                <p class="text-gray-700">Discovering the latest in AI and web development is thrilling! Here's what I learned this week...</p>
-                <a href="tech.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
-            </article>
-            <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="travel" data-aos="fade-up" data-aos-delay="100">
-                <img src="https://via.placeholder.com/150" alt="Travel Post" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
-                <h3 class="text-2xl font-bold mb-2">A Journey Through the Mountains</h3>
-                <p class="text-gray-500 text-sm mb-4">Posted on July 10, 2025</p>
-                <p class="text-gray-700">Exploring serene landscapes and hidden trails was unforgettable. Join me on this adventure!</p>
-                <a href="travel.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
-            </article>
-            <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="books" data-aos="fade-up" data-aos-delay="200">
-                <img src="https://via.placeholder.com/150" alt="Books Post" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
-                <h3 class="text-2xl font-bold mb-2">Must-Read Novels of 2025</h3>
-                <p class="text-gray-500 text-sm mb-4">Posted on July 5, 2025</p>
-                <p class="text-gray-700">These books captured my heart this year. Dive into my top picks for 2025!</p>
-                <a href="books.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
-            </article>
-        </div>
-    </section>
+        <!-- Search Bar -->
+        <section class="max-w-4xl mx-auto py-4 px-4">
+            <input id="searchBar" type="text" placeholder="Search posts..." class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600">
+        </section>
 
-    <!-- Analytics Dashboard -->
-    <section class="max-w-4xl mx-auto py-8 px-4">
-        <h2 class="text-3xl font-semibold mb-6 text-center" data-aos="fade-up">Blog Analytics</h2>
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <p class="text-gray-700">Total Posts: <span id="totalPosts">3</span></p>
-            <p class="text-gray-700">Most Popular Category: <span id="popularCategory">Tech</span></p>
-        </div>
-    </section>
+        <!-- Featured Posts Section -->
+        <section class="max-w-4xl mx-auto py-8 px-4">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Featured Posts</h2>
+            <div id="blogPosts" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="tech">
+                    <img src="https://via.placeholder.com/150" alt="Tech Post" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
+                    <h3 class="text-2xl font-bold mb-2">Exploring New Tech Trends</h3>
+                    <p class="text-gray-500 text-sm mb-4">Posted on July 14, 2025</p>
+                    <p class="text-gray-700">Discovering the latest in AI and web development is thrilling! Here's what I learned this week...</p>
+                    <a href="tech.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+                </article>
+                <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="travel">
+                    <img src="https://placehold.co/400x250/818CF8/FFFFFF?text=Kyoto+Thumbnail" alt="Kyoto Thumbnail" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
+                    <h3 class="text-2xl font-bold mb-2">A Journey Through the Mountains</h3>
+                    <p class="text-gray-500 text-sm mb-4">Posted on July 10, 2025</p>
+                    <p class="text-gray-700">Exploring serene landscapes and hidden trails was unforgettable. Join me on this adventure!</p>
+                    <a href="travel.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+                </article>
+                <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="books">
+                    <img src="https://placehold.co/400x250/FCA5A5/FFFFFF?text=NYC+Thumbnail" alt="Books Post" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
+                    <h3 class="text-2xl font-bold mb-2">Must-Read Novels of 2025</h3>
+                    <p class="text-gray-500 text-sm mb-4">Posted on July 5, 2025</p>
+                    <p class="text-700">These books captured my heart this year. Dive into my top picks for 2025!</p>
+                    <a href="books.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+                </article>
+            </div>
+        </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white text-center py-4">
-        <p>© 2025 The Embrowned Lilac. All rights reserved.</p>
-    </footer>
+        <!-- Analytics Dashboard -->
+        <section class="max-w-4xl mx-auto py-8 px-4">
+            <h2 class="text-3xl font-semibold mb-6 text-center" data-aos="fade-up">Blog Analytics</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-gray-700">Total Posts: <span id="totalPosts">3</span></p>
+                <p class="text-gray-700">Most Popular Category: <span id="popularCategory">Tech</span></p>
+            </div>
+        </section>
 
-    <!-- Back to Top Button -->
-    <button id="backToTopBtn" title="Go to top">
-        &#x2191; <!-- Up arrow character -->
-    </button>
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white text-center py-4">
+            <p>© 2025 The Embrowned Lilac. All rights reserved.</p>
+        </footer>
+
+        <!-- Back to Top Button -->
+        <button id="backToTopBtn" title="Go to top">
+            &#x2191; <!-- Up arrow character -->
+        </button>
+    </div> <!-- End of main-content -->
 
     <script>
-        AOS.init();
+        AOS.init(); // Keep AOS initialization for other elements if needed, but removed attributes from articles
 
         // Dark Mode Toggle
         const darkModeToggle = document.getElementById('darkModeToggle');
@@ -454,16 +598,18 @@
         const currentPath = window.location.pathname.split('/').pop(); // e.g., "index.html" or ""
 
         navLinks.forEach(link => {
-            const linkPath = link.getAttribute('href').split('/').pop(); // Corrected: Removed duplicate .getAttribute('href')
+            const linkPath = link.getAttribute('href').split('/').pop();
             // Handle both "index.html" and root path "" for home
             if (currentPath === linkPath || (currentPath === '' && linkPath === 'index.html')) {
                 link.classList.add('active');
             }
         });
 
-        // Smooth Image Loading (Intersection Observer)
-        document.addEventListener("DOMContentLoaded", function() {
+        // Function to initialize lazy loading for images
+        function initializeLazyLoading() {
+            console.log("Initializing lazy loading for images...");
             const lazyImages = document.querySelectorAll(".lazy-fade-in");
+            console.log("Found lazy images:", lazyImages.length); // Log how many images are found
 
             if ("IntersectionObserver" in window) {
                 let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
@@ -472,6 +618,7 @@
                             let lazyImage = entry.target;
                             lazyImage.classList.add('is-loaded'); // Trigger fade-in
                             lazyImageObserver.unobserve(lazyImage);
+                            console.log("Image loaded:", lazyImage.alt);
                         }
                     });
                 });
@@ -483,9 +630,10 @@
                 // Fallback for browsers that don't support Intersection Observer
                 lazyImages.forEach(function(lazyImage) {
                     lazyImage.classList.add('is-loaded');
+                    console.log("Image loaded (fallback):", lazyImage.alt);
                 });
             }
-        });
+        }
 
         // Back to Top Button Functionality
         const backToTopBtn = document.getElementById("backToTopBtn");
@@ -514,7 +662,7 @@
         let lastPetalTime = 0;
         const petalCreationInterval = 70; // milliseconds between new petals
 
-        // Function to create and animate a petal
+        // Function to create and animate a petal (for hero section)
         function createPetal(x, y) {
             const currentTime = Date.now();
             if (currentTime - lastPetalTime < petalCreationInterval) {
@@ -529,7 +677,6 @@
             petal.style.top = `${y}px`;
 
             // Set petal color based on the current color of "The Embrowned Lilac" text
-            // This will now correctly pick up the animated color
             const computedColor = window.getComputedStyle(lilacBrowningSpan).color;
             petal.style.backgroundColor = computedColor;
 
@@ -563,7 +710,7 @@
             }, (randomDuration + randomDelay) * 1000); // Convert to milliseconds
         }
 
-        // Mouse movement listener
+        // Mouse movement listener for hero section
         heroContainer.addEventListener('mousemove', (e) => {
             const rect = heroContainer.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -571,7 +718,7 @@
             createPetal(x, y);
         });
 
-        // Touch movement listener
+        // Touch movement listener for hero section
         heroContainer.addEventListener('touchmove', (e) => {
             const rect = heroContainer.getBoundingClientRect();
             const touch = e.touches[0]; // Get the first touch point
@@ -579,6 +726,199 @@
             const y = touch.clientY - rect.top;
             createPetal(x, y);
         });
+
+        // Function to create and animate burst petals for nav links
+        function createNavBurstPetals(x, y, targetElement) {
+            const numberOfPetals = 5; // Number of petals to burst
+            for (let i = 0; i < numberOfPetals; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('nav-burst-petal');
+
+                // Position relative to the target element
+                const targetRect = targetElement.getBoundingClientRect();
+                petal.style.left = `${x - targetRect.left}px`;
+                petal.style.top = `${y - targetRect.top}px`;
+
+                // Randomize size
+                const randomSize = Math.random() * (8 - 4) + 4; // Smaller petals for burst
+                petal.style.width = `${randomSize}px`;
+                petal.style.height = `${randomSize * 2}px`;
+
+                // Randomize burst direction and rotation
+                const angle = Math.random() * 2 * Math.PI; // Full circle
+                const distance = Math.random() * 50 + 20; // Distance from origin
+                petal.style.setProperty('--burst-x', `${Math.cos(angle) * distance}px`);
+                petal.style.setProperty('--burst-y', `${Math.sin(angle) * distance}px`);
+                petal.style.setProperty('--burst-rotate', `${Math.random() * 720 - 360}deg`); // Spin randomly
+
+                targetElement.appendChild(petal); // Append to the link itself for relative positioning
+
+                // Remove petal after animation
+                petal.addEventListener('animationend', () => {
+                    petal.remove();
+                });
+            }
+        }
+
+        // Add event listeners for navigation links
+        navLinks.forEach(link => {
+            // Mouse Enter/Leave for bounce and color burst
+            link.addEventListener('mouseenter', () => {
+                link.classList.add('hover-effect'); // You can add a class for hover effects if needed
+            });
+            link.addEventListener('mouseleave', () => {
+                link.classList.remove('hover-effect');
+            });
+
+            // Click/Touch for color burst and petal burst
+            link.addEventListener('click', (e) => {
+                link.classList.add('clicked-effect');
+                // Remove the class after animation to allow re-triggering
+                link.addEventListener('animationend', () => {
+                    link.classList.remove('clicked-effect');
+                }, { once: true }); // Ensure it only runs once per click
+
+                // Get click position for petal burst
+                createNavBurstPetals(e.clientX, e.clientY, link);
+            });
+
+            link.addEventListener('touchstart', (e) => {
+                link.classList.add('clicked-effect');
+                // Get touch position for petal burst
+                const touch = e.touches[0];
+                createNavBurstPetals(touch.clientX, touch.clientY, link);
+            });
+
+            link.addEventListener('touchend', () => {
+                link.classList.remove('clicked-effect');
+            });
+        });
+
+        // NEW: Entry Animation Logic
+        const cloudOverlay = document.getElementById('cloud-overlay');
+        const mainContent = document.getElementById('main-content');
+        let introAnimationStarted = false; // Flag to prevent re-triggering
+
+        // Function to trigger the cloud disappearance and subsequent animations
+        function startIntroAnimation() {
+            if (introAnimationStarted) {
+                console.log("Intro animation already started, returning.");
+                return;
+            }
+            introAnimationStarted = true;
+            console.log("Starting intro animation...");
+
+            // 1. Clouds disappear
+            cloudOverlay.classList.add('fade-out');
+            console.log("Cloud overlay fading out...");
+
+            // Listen for the end of the cloud fade-out
+            cloudOverlay.addEventListener('transitionend', () => {
+                console.log("Cloud overlay fade-out complete.");
+                cloudOverlay.style.display = 'none'; // Hide overlay completely
+                triggerPetalBurst(); // Trigger the petal burst
+            }, { once: true }); // Ensure this listener runs only once
+        }
+
+        // Function to trigger the petal burst and fall (Enhanced for full screen spread)
+        function triggerPetalBurst() {
+            console.log("Triggering petal burst...");
+            const numberOfBurstPetals = 100; // More petals for a dramatic burst
+
+            for (let i = 0; i < numberOfBurstPetals; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('burst-petal');
+
+                // Random initial position across the top 60% of the viewport
+                const initialX = Math.random() * window.innerWidth;
+                const initialY = Math.random() * window.innerHeight * 0.6;
+
+                petal.style.left = `${initialX}px`;
+                petal.style.top = `${initialY}px`;
+
+                // Randomize size
+                const randomSize = Math.random() * (15 - 8) + 8; // Larger petals for burst
+                petal.style.width = `${randomSize}px`;
+                petal.style.height = `${randomSize * 2}px`;
+
+                // Randomize burst direction and rotation
+                const angle = Math.random() * 2 * Math.PI; // Full circle
+                // Make distance proportional to screen size to ensure spread across the entire screen
+                const maxDistance = Math.max(window.innerWidth, window.innerHeight) * 0.7;
+                const distance = Math.random() * maxDistance + 50; // Distance from initial point for burst
+
+                // These are offsets from the initialX, initialY
+                const burstOffsetX = Math.cos(angle) * distance;
+                const burstOffsetY = Math.sin(angle) * distance;
+
+                // Apply burst animation
+                petal.style.animation = `petal-burst 0.8s ease-out forwards`;
+                petal.style.setProperty('--burst-x', `${burstOffsetX}px`);
+                petal.style.setProperty('--burst-y', `${burstOffsetY}px`);
+                petal.style.setProperty('--burst-rotate', `${Math.random() * 720 - 360}deg`);
+
+                document.body.appendChild(petal);
+
+                // After burst, transition to fall animation
+                petal.addEventListener('animationend', (event) => {
+                    if (event.animationName === 'petal-burst') {
+                        petal.style.animation = `petal-fall-after-burst ${Math.random() * (5 - 2) + 2}s linear forwards`;
+                    }
+                }, { once: true });
+
+                // Remove petal after it falls off-screen
+                petal.addEventListener('animationend', (event) => {
+                    if (event.animationName === 'petal-fall-after-burst') {
+                        petal.remove();
+                    }
+                });
+            }
+
+            // After a short delay (enough for petals to burst and start falling), reveal main content
+            setTimeout(() => {
+                console.log("Attempting to reveal main content.");
+                mainContent.style.opacity = '1';     // Ensure full opacity
+                mainContent.style.pointerEvents = 'all'; // Enable interaction
+                console.log("Main content opacity set to:", mainContent.style.opacity);
+
+                // NOW initialize lazy loading after main content is visible
+                initializeLazyLoading();
+                console.log("Lazy loading should be initialized now.");
+
+                // Log the number of blog posts after main content is visible
+                const blogPostsContainer = document.getElementById('blogPosts');
+                if (blogPostsContainer) {
+                    console.log("Number of blog posts found:", blogPostsContainer.children.length);
+                } else {
+                    console.log("Blog posts container (#blogPosts) not found!");
+                }
+
+
+            }, 2000); // Keep the delay for now
+        }
+
+        // Add event listeners to trigger the intro animation
+        // Use passive listeners for scroll/touch to improve performance
+        window.addEventListener('scroll', () => {
+            console.log("Scroll event detected.");
+            startIntroAnimation();
+        }, { once: true, passive: true });
+        window.addEventListener('click', () => {
+            console.log("Click event detected.");
+            startIntroAnimation();
+        }, { once: true });
+        window.addEventListener('touchstart', () => {
+            console.log("Touchstart event detected.");
+            startIntroAnimation();
+        }, { once: true, passive: true });
+
+        // Ensure main content is hidden on load until animation completes
+        document.addEventListener('DOMContentLoaded', () => {
+            mainContent.style.opacity = '0';     // Set opacity to 0
+            mainContent.style.pointerEvents = 'none';
+            console.log("DOM loaded. Main content initially hidden.");
+        });
+
     </script>
 </body>
 </html>
