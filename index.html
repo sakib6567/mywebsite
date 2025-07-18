@@ -40,7 +40,7 @@
         /* Keyframes for the subtle background gradient animation */
         @keyframes background-gradient-animation {
             0% { background-position: 0% 50%, 100% 50%; }
-            50% { background-position: 100% 50%; }
+            50% { background-position: 100% 50%, 50% 50%; }
             100% { background-position: 0% 50%, 100% 50%; }
         }
 
@@ -76,7 +76,7 @@
             z-index: 1; /* Below text, above nothing */
         }
 
-        /* Petal Animation Styling */
+        /* Petal Animation Styling (for static petals) */
         .petal {
             position: absolute;
             background-color: #a78bfa; /* Vibrant lilac purple */
@@ -246,6 +246,43 @@
         #backToTopBtn:hover {
             background-color: #5a3a9e; /* Darker purple on hover */
             transform: translateY(-3px); /* Slight lift on hover */
+        }
+
+        /* NEW: Styles and Keyframes for dynamically generated petals */
+        @keyframes cursor-petal-fall {
+            0% {
+                transform: translateY(0px) rotate(var(--initial-rotate, 0deg)) scale(1);
+                opacity: 0.8;
+            }
+            20% {
+                transform: translateY(20vh) translateX(var(--sway-x1, 0px)) rotate(var(--mid-rotate1, 90deg)) scale(1.1);
+                opacity: 0.7;
+            }
+            40% {
+                transform: translateY(40vh) translateX(var(--sway-x2, 0px)) rotate(var(--mid-rotate2, 180deg)) scale(1.2);
+                opacity: 0.6;
+            }
+            60% {
+                transform: translateY(60vh) translateX(var(--sway-x3, 0px)) rotate(var(--mid-rotate3, 270deg)) scale(1.1);
+                opacity: 0.4;
+            }
+            80% {
+                transform: translateY(80vh) translateX(var(--sway-x4, 0px)) rotate(var(--mid-rotate4, 360deg)) scale(1);
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(100vh) rotate(var(--end-rotate, 450deg)) scale(0.8);
+                opacity: 0;
+            }
+        }
+        .dynamic-petal {
+            position: absolute;
+            background-color: #a78bfa; /* Vibrant lilac purple */
+            border-radius: 50% 50% 20% 20%; /* Petal-like shape */
+            opacity: 0.8;
+            z-index: 4; /* Ensure it's above hero text */
+            pointer-events: none; /* Allow cursor to pass through */
+            /* Animation properties will be set by JavaScript */
         }
     </style>
 </head>
@@ -433,6 +470,74 @@
         backToTopBtn.addEventListener("click", function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+
+        // Interactive Petal Fall on Cursor Movement (now with touch support)
+        const heroContainer = document.querySelector('.hero-container');
+        let lastPetalTime = 0;
+        const petalCreationInterval = 70; // milliseconds between new petals
+
+        // Function to create and animate a petal
+        function createPetal(x, y) {
+            const currentTime = Date.now();
+            if (currentTime - lastPetalTime < petalCreationInterval) {
+                return; // Too soon for a new petal
+            }
+            lastPetalTime = currentTime;
+
+            const petal = document.createElement('div');
+            petal.classList.add('dynamic-petal'); // Use the new class for dynamic petals
+
+            petal.style.left = `${x}px`;
+            petal.style.top = `${y}px`;
+
+            // Randomize size
+            const randomSize = Math.random() * (12 - 6) + 6; // Size between 6px and 12px
+            petal.style.width = `${randomSize}px`;
+            petal.style.height = `${randomSize * 2}px`; // Maintain aspect ratio
+
+            // Randomize animation properties using CSS variables for sway and rotation
+            const randomDuration = Math.random() * (6 - 3) + 3; // Duration between 3s and 6s
+            const randomDelay = Math.random() * 0.2; // Delay up to 0.2s
+            petal.style.animation = `cursor-petal-fall ${randomDuration}s linear ${randomDelay}s forwards`;
+
+            petal.style.setProperty('--initial-rotate', `${Math.random() * 360}deg`);
+            petal.style.setProperty('--mid-rotate1', `${Math.random() * 360 + 90}deg`);
+            petal.style.setProperty('--mid-rotate2', `${Math.random() * 360 + 180}deg`);
+            petal.style.setProperty('--mid-rotate3', `${Math.random() * 360 + 270}deg`);
+            petal.style.setProperty('--mid-rotate4', `${Math.random() * 360 + 360}deg`);
+            petal.style.setProperty('--end-rotate', `${Math.random() * 360 + 450}deg`);
+
+            petal.style.setProperty('--sway-x1', `${(Math.random() - 0.5) * 80}px`);
+            petal.style.setProperty('--sway-x2', `${(Math.random() - 0.5) * 80}px`);
+            petal.style.setProperty('--sway-x3', `${(Math.random() - 0.5) * 80}px`);
+            petal.style.setProperty('--sway-x4', `${(Math.random() - 0.5) * 80}px`);
+
+            heroContainer.appendChild(petal);
+
+            // Remove petal after its animation completes
+            setTimeout(() => {
+                petal.remove();
+            }, (randomDuration + randomDelay) * 1000); // Convert to milliseconds
+        }
+
+        // Mouse movement listener
+        heroContainer.addEventListener('mousemove', (e) => {
+            const rect = heroContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            createPetal(x, y);
+        });
+
+        // Touch movement listener
+        heroContainer.addEventListener('touchmove', (e) => {
+            // Prevent default scrolling behavior while touching the hero section
+            e.preventDefault();
+            const rect = heroContainer.getBoundingClientRect();
+            const touch = e.touches[0]; // Get the first touch point
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            createPetal(x, y);
+        }, { passive: false }); // Use passive: false to allow preventDefault
     </script>
 </body>
 </html>
