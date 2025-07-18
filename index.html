@@ -34,7 +34,7 @@
             /* Subtle animated background gradient */
             background: linear-gradient(-45deg, #f3f4f6, #e0e7ff, #ede9fe, #f3f4f6);
             background-size: 400% 400%; /* Larger background size for animation */
-            animation: background-gradient-animation 15s ease infinite alternate; /* Slow animation */
+            animation: background-gradient-animation 15s ease infinite alternate;
         }
 
         /* Keyframes for the subtle background gradient animation */
@@ -76,16 +76,32 @@
             z-index: 1; /* Below text, above nothing */
         }
 
+        /* NEW: Animation for "The Embrowned Lilac" text color browning */
+        @keyframes lilac-browning-animation {
+            0% { color: #ffffff; } /* Start white */
+            50% { color: #a78bfa; } /* Mid-tone lilac, vibrant purple */
+            100% { color: #6F4E37; } /* End a more distinct brown */
+        }
+
+        /* NEW: Animation for petal background color browning */
+        @keyframes petal-browning-animation {
+            0% { background-color: #a78bfa; } /* Initial lilac for petals */
+            50% { background-color: #c7a4ff; } /* Mid-tone lilac for petals */
+            100% { background-color: #6F4E37; } /* Distinct brown for petals */
+        }
+
+
         /* Petal Animation Styling (for static petals) */
         .petal {
             position: absolute;
-            background-color: #a78bfa; /* Vibrant lilac purple */
             border-radius: 50% 50% 20% 20%; /* Petal-like shape */
             opacity: 0.8;
-            animation: fancy-fall linear infinite;
+            /* Apply both movement and the new petal color animations directly */
+            animation: fancy-fall linear infinite,
+                       petal-browning-animation 7s ease-in-out infinite alternate;
             z-index: 2; /* Above background image, below hero text */
         }
-        /* 12 petals with varied sizes, speeds, and sway */
+        /* 20 petals with varied sizes, speeds, and sway */
         .petal:nth-child(1) { left: 5%; animation-duration: 5s; animation-delay: 0s; width: 10px; height: 20px; transform: translateX(-10px); }
         .petal:nth-child(2) { left: 15%; animation-duration: 6s; animation-delay: 0.5s; width: 14px; height: 28px; transform: translateX(15px); }
         .petal:nth-child(3) { left: 25%; animation-duration: 4.5s; animation-delay: 1s; width: 12px; height: 24px; transform: translateX(-20px); }
@@ -96,22 +112,28 @@
         .petal:nth-child(8) { left: 75%; animation-duration: 4.8s; animation-delay: 3.5s; width: 10px; height: 20px; transform: translateX(15px); }
         .petal:nth-child(9) { left: 85%; animation-duration: 5.2s; animation-delay: 4s; width: 14px; height: 28px; transform: translateX(-20px); }
         .petal:nth-child(10) { left: 95%; animation-duration: 6s; animation-delay: 4.5s; width: 12px; height: 24px; transform: translateX(10px); }
-        .petal:nth-child(11) { left: 20%; animation-duration: 5.5s; animation-delay: 5s; width: 11px; height: 22px; transform: translateX(-15px); }
-        .petal:nth-child(12) { left: 80%; animation-duration: 5s; animation-delay: 5.5s; width: 13px; height: 26px; transform: translateX(20px); }
+        .petal:nth-child(11) { left: 10%; animation-duration: 5.8s; animation-delay: 5s; width: 13px; height: 26px; transform: translateX(-5px); }
+        .petal:nth-child(12) { left: 20%; animation-duration: 4.7s; animation-delay: 5.5s; width: 11px; height: 22px; transform: translateX(25px); }
+        .petal:nth-child(13) { left: 30%; animation-duration: 6.2s; animation-delay: 0.2s; width: 15px; height: 30px; transform: translateX(-18px); }
+        .petal:nth-child(14) { left: 40%; animation-duration: 5.3s; animation-delay: 0.7s; width: 9px; height: 18px; transform: translateX(12px); }
+        .petal:nth-child(15) { left: 50%; animation-duration: 6.8s; animation-delay: 1.2s; width: 16px; height: 32px; transform: translateX(-22px); }
+        .petal:nth-child(16) { left: 60%; animation-duration: 5.1s; animation-delay: 1.7s; width: 10px; height: 20px; transform: translateX(8px); }
+        .petal:nth-child(17) { left: 70%; animation-duration: 5.9s; animation-delay: 2.2s; width: 14px; height: 28px; transform: translateX(-14px); }
+        .petal:nth-child(18) { left: 80%; animation-duration: 4.9s; animation-delay: 2.7s; width: 12px; height: 24px; transform: translateX(17px); }
+        .petal:nth-child(19) { left: 90%; animation-duration: 6.4s; animation-delay: 3.2s; width: 11px; height: 22px; transform: translateX(-9px); }
+        .petal:nth-child(20) { left: 2%; animation-duration: 5.6s; animation-delay: 3.7s; width: 13px; height: 26px; transform: translateX(20px); }
+
         @keyframes fancy-fall {
             0% {
                 transform: translateY(-30px) rotate(0deg) scale(1);
-                background-color: #a78bfa; /* Start purple */
                 opacity: 0.8;
             }
             50% {
                 transform: translateY(50vh) rotate(180deg) scale(1.3); /* Sway and grow */
-                background-color: #c7a4ff; /* Mid-tone purple */
                 opacity: 0.6;
             }
             100% {
                 transform: translateY(100vh) rotate(360deg) scale(0.9); /* Sway back and shrink */
-                background-color: #8b5a2b; /* Browned hue */
                 opacity: 0;
             }
         }
@@ -133,6 +155,12 @@
         @keyframes text-appear {
             0% { opacity: 0; transform: scale(0.8) translateY(20px); filter: blur(5px); }
             100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        /* Text using the animated color */
+        .lilac-browning {
+            /* The color property will be animated by the keyframes */
+            animation: lilac-browning-animation 7s ease-in-out infinite alternate;
         }
 
         /* Navigation Link Styling (Sacramento) */
@@ -277,7 +305,7 @@
         }
         .dynamic-petal {
             position: absolute;
-            background-color: #a78bfa; /* Vibrant lilac purple */
+            background-color: #a78bfa; /* Default, will be overridden by JS */
             border-radius: 50% 50% 20% 20%; /* Petal-like shape */
             opacity: 0.8;
             z-index: 4; /* Ensure it's above hero text */
@@ -310,6 +338,15 @@
     <!-- Hero Section with Full-Screen Local Purple Tree Image and Petals -->
     <section id="home" class="hero-container text-white text-center">
         <div class="parallax-bg"></div> <!-- Parallax background layer -->
+        <!-- Static Petals (increased to 20) -->
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
         <div class="petal"></div>
         <div class="petal"></div>
         <div class="petal"></div>
@@ -324,7 +361,7 @@
         <div class="petal"></div>
         <div class="hero-text">
             <!-- Main Hero Title (Dancing Script) -->
-            <h1 class="text-5xl font-bold mb-4" data-aos="fade-up">Welcome to The Embrowned Lilac</h1>
+            <h1 class="text-5xl font-bold mb-4" data-aos="fade-up">Welcome to <span class="lilac-browning">The Embrowned Lilac</span></h1>
             <p class="text-xl max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">A place where thoughts bloom and stories unfold, like a lilac gently browning.</p>
         </div>
     </section>
@@ -417,7 +454,7 @@
         const currentPath = window.location.pathname.split('/').pop(); // e.g., "index.html" or ""
 
         navLinks.forEach(link => {
-            const linkPath = link.getAttribute('href').split('/').pop();
+            const linkPath = link.getAttribute('href').split('/').pop(); // Corrected: Removed duplicate .getAttribute('href')
             // Handle both "index.html" and root path "" for home
             if (currentPath === linkPath || (currentPath === '' && linkPath === 'index.html')) {
                 link.classList.add('active');
@@ -473,6 +510,7 @@
 
         // Interactive Petal Fall on Cursor Movement (now with touch support)
         const heroContainer = document.querySelector('.hero-container');
+        const lilacBrowningSpan = document.querySelector('.lilac-browning'); // Get the span for color
         let lastPetalTime = 0;
         const petalCreationInterval = 70; // milliseconds between new petals
 
@@ -490,6 +528,11 @@
             petal.style.left = `${x}px`;
             petal.style.top = `${y}px`;
 
+            // Set petal color based on the current color of "The Embrowned Lilac" text
+            // This will now correctly pick up the animated color
+            const computedColor = window.getComputedStyle(lilacBrowningSpan).color;
+            petal.style.backgroundColor = computedColor;
+
             // Randomize size
             const randomSize = Math.random() * (12 - 6) + 6; // Size between 6px and 12px
             petal.style.width = `${randomSize}px`;
@@ -501,10 +544,10 @@
             petal.style.animation = `cursor-petal-fall ${randomDuration}s linear ${randomDelay}s forwards`;
 
             petal.style.setProperty('--initial-rotate', `${Math.random() * 360}deg`);
-            petal.style.setProperty('--mid-rotate1', `${Math.random() * 360 + 90}deg`);
-            petal.style.setProperty('--mid-rotate2', `${Math.random() * 360 + 180}deg`);
-            petal.style.setProperty('--mid-rotate3', `${Math.random() * 360 + 270}deg`);
-            petal.style.setProperty('--mid-rotate4', `${Math.random() * 360 + 360}deg`);
+            petal.style.setProperty('--mid-rotate1', `${(Math.random() - 0.5) * 180 + 90}deg`); // More controlled rotation
+            petal.style.setProperty('--mid-rotate2', `${(Math.random() - 0.5) * 180 + 180}deg`);
+            petal.style.setProperty('--mid-rotate3', `${(Math.random() - 0.5) * 180 + 270}deg`);
+            petal.style.setProperty('--mid-rotate4', `${(Math.random() - 0.5) * 180 + 360}deg`);
             petal.style.setProperty('--end-rotate', `${Math.random() * 360 + 450}deg`);
 
             petal.style.setProperty('--sway-x1', `${(Math.random() - 0.5) * 80}px`);
@@ -528,15 +571,14 @@
             createPetal(x, y);
         });
 
-        // Touch movement listener - REMOVED e.preventDefault()
+        // Touch movement listener
         heroContainer.addEventListener('touchmove', (e) => {
-            // No e.preventDefault() here, allowing default scrolling
             const rect = heroContainer.getBoundingClientRect();
             const touch = e.touches[0]; // Get the first touch point
             const x = touch.clientX - rect.left;
             const y = touch.clientY - rect.top;
             createPetal(x, y);
-        }); // Removed { passive: false } as preventDefault is no longer called
+        });
     </script>
 </body>
 </html>
