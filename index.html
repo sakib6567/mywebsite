@@ -23,36 +23,57 @@
         /* Prevent horizontal scrolling on the entire page */
         html, body {
             overflow-x: hidden;
+            scroll-behavior: smooth; /* Ensure smooth scrolling for "Back to Top" */
         }
 
-        /* Base styles and custom animations */
+        /* Base styles and custom animations for body background */
         body {
-            /* Applied Roboto for body text */
             font-family: 'Roboto', sans-serif;
             transition-property: color, background-color, border-color;
             transition-duration: 300ms;
-            background-color: #f3f4f6; /* Default light gray background */
+            /* Subtle animated background gradient */
+            background: linear-gradient(-45deg, #f3f4f6, #e0e7ff, #ede9fe, #f3f4f6);
+            background-size: 400% 400%; /* Larger background size for animation */
+            animation: background-gradient-animation 15s ease infinite alternate; /* Slow animation */
+        }
+
+        /* Keyframes for the subtle background gradient animation */
+        @keyframes background-gradient-animation {
+            0% { background-position: 0% 50%, 100% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%, 100% 50%; }
         }
 
         /* Headings Font Style (Playfair Display) */
         h1, h2, h3 {
-            /* Applied Playfair Display for general headings */
             font-family: 'Playfair Display', serif;
         }
 
-        /* Hero Section Styling */
+        /* Hero Section Styling for Parallax */
         .hero-container {
             position: relative;
-            width: 100%; /* Ensure it's 100% of parent, not viewport width (vw can sometimes cause issues) */
-            height: 100vh; /* Full viewport height */
-            background: #4b5563 url('purple-tree.jpg') no-repeat center center/cover; /* Local purple tree image */
+            width: 100%;
+            height: 100vh;
             overflow: hidden; /* Hide any internal overflow */
-            /* Faint lilac flower pattern overlay */
-            background-image: radial-gradient(circle, rgba(167, 139, 250, 0.2) 2px, transparent 2px), url('purple-tree.jpg');
-            background-size: 20px 20px, cover;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Parallax Background Layer */
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #4b5563 url('purple-tree.jpg') no-repeat center center/cover;
+            /* Faint lilac flower pattern overlay */
+            background-image: radial-gradient(circle, rgba(167, 139, 250, 0.2) 2px, transparent 2px), url('purple-tree.jpg');
+            background-size: 20px 20px, cover;
+            /* This is the magic for parallax: fixed background attachment */
+            background-attachment: fixed;
+            z-index: 1; /* Below text, above nothing */
         }
 
         /* Petal Animation Styling */
@@ -62,7 +83,7 @@
             border-radius: 50% 50% 20% 20%; /* Petal-like shape */
             opacity: 0.8;
             animation: fancy-fall linear infinite;
-            z-index: 2; /* Above background image */
+            z-index: 2; /* Above background image, below hero text */
         }
         /* 12 petals with varied sizes, speeds, and sway */
         .petal:nth-child(1) { left: 5%; animation-duration: 5s; animation-delay: 0s; width: 10px; height: 20px; transform: translateX(-10px); }
@@ -108,9 +129,10 @@
         .hero-text h1 {
             font-family: 'Dancing Script', cursive;
         }
+        /* Enhanced blooming effect for hero text */
         @keyframes text-appear {
-            0% { opacity: 0; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
+            0% { opacity: 0; transform: scale(0.8) translateY(20px); filter: blur(5px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
         }
 
         /* Navigation Link Styling (Sacramento) */
@@ -121,6 +143,7 @@
             font-weight: 700; /* Attempt to make it bolder */
             text-decoration: none; /* Ensure no underline */
             font-size: 1.1rem; /* Even smaller default size for very small screens */
+            position: relative; /* Needed for ::after positioning */
         }
         /* Responsive font sizes for nav links */
         @media (min-width: 480px) { /* Extra small breakpoint for very narrow phones */
@@ -142,6 +165,26 @@
             color: #d8b4fe; /* Lighter purple on hover */
             text-decoration: none; /* Explicitly remove underline on hover */
         }
+
+        /* Active Navigation Link Indicator */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px; /* Start below the link */
+            left: 0;
+            background-color: #d8b4fe; /* Lighter purple underline */
+            transform: scaleX(0); /* Hidden initially */
+            transition: transform 0.3s ease-out;
+            transform-origin: bottom right; /* Animation origin */
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            transform: scaleX(1); /* Reveal on hover/active */
+            transform-origin: bottom left; /* Animation origin */
+        }
+
 
         /* Dark Mode Toggle Button Styling */
         #darkModeToggle {
@@ -165,70 +208,45 @@
         .dark-mode .bg-purple-600 { background-color: #4c1d95; } /* Darker purple for dark mode nav */
         .hidden { display: none; }
 
-        /* Tailwind utility classes (copied from your styles.css for self-containment) */
-        .bg-purple-600 { background-color: #6b46c1; }
-        .text-white { color: #ffffff; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-        .sticky { position: sticky; }
-        .top-0 { top: 0; }
-        .z-10 { z-index: 10; }
-        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-        .max-w-6xl { max-width: 72rem; }
-        .mx-auto { margin-left: auto; margin-right: auto; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .flex { display: flex; }
-        .justify-between { justify-content: space-between; }
-        .items-center { align-items: center; }
-        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
-        .font-bold { font-weight: 700; }
-        .space-x-6 > * + * { margin-left: 1.5rem; }
-        .hover\:underline:hover { text-decoration: underline; } /* Kept this for other elements that might use it */
-        .bg-gray-200 { background-color: #e5e7eb; }
-        .text-gray-800 { color: #1f2937; }
-        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
-        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
-        .rounded { border-radius: 0.25rem; }
-        .hover\:bg-gray-300:hover { background-color: #d1d5db; }
-        .text-center { text-align: center; }
-        .py-24 { padding-top: 6rem; padding-bottom: 6rem; }
-        .text-5xl { font-size: 3rem; line-height: 1; }
-        .mb-4 { margin-bottom: 1rem; }
-        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-        .max-w-2xl { max-width: 42rem; }
-        .bg-gray-100 { background-color: #f3f4f6; }
-        .font-sans { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
-        .transition-colors { transition-property: color, background-color, border-color; }
-        .duration-300 { transition-duration: 300ms; }
-        .p-3 { padding: 0.75rem; }
-        .rounded-lg { border-radius: 0.5rem; }
-        .border { border-width: 1px; }
-        .border-gray-300 { border-color: #d1d5db; }
-        .focus\:outline-none:focus { outline: none; }
-        .focus\:ring-2:focus { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05); }
-        .focus\:ring-blue-600:focus { box-shadow: 0 0 0 2px #2563eb; }
-        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
-        .font-semibold { font-weight: 600; }
-        .mb-6 { margin-bottom: 1.5rem; }
-        .grid { display: grid; }
-        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-        .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .gap-6 { gap: 1.5rem; }
-        .bg-white { background-color: #ffffff; }
-        .p-6 { padding: 1.5rem; }
-        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-        .transform { transform: translate(0, 0); }
-        .hover\:scale-105:hover { transform: scale(1.05); }
-        .transition-transform { transition-property: transform; }
-        .w-full { width: 100%; }
-        .h-48 { height: 12rem; }
-        .object-cover { object-fit: cover; }
-        .text-gray-500 { color: #6b7280; }
-        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-        .text-gray-700 { color: #374151; }
-        .text-blue-600 { color: #2563eb; }
-        .mt-4 { margin-top: 1rem; }
-        .inline-block { display: inline-block; }
-        .bg-gray-800 { background-color: #1f2937; }
+        /* Featured Post Card Hover Effect */
+        .featured-post-card:hover {
+            transform: translateY(-5px) scale(1.02); /* Lift and slightly scale */
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.08); /* More pronounced shadow */
+        }
+        .featured-post-card {
+            transition: all 0.3s ease-in-out; /* Smooth transition for all properties */
+        }
+
+        /* Image Fade-in on Load */
+        .lazy-fade-in {
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+        }
+        .lazy-fade-in.is-loaded {
+            opacity: 1;
+        }
+
+        /* Back to Top Button */
+        #backToTopBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #6b46c1; /* Purple */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50%; /* Circular button */
+            font-size: 1.5rem; /* Larger icon */
+            line-height: 1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 1000; /* Ensure it's on top */
+        }
+        #backToTopBtn:hover {
+            background-color: #5a3a9e; /* Darker purple on hover */
+            transform: translateY(-3px); /* Slight lift on hover */
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans transition-colors duration-300">
@@ -254,6 +272,7 @@
 
     <!-- Hero Section with Full-Screen Local Purple Tree Image and Petals -->
     <section id="home" class="hero-container text-white text-center">
+        <div class="parallax-bg"></div> <!-- Parallax background layer -->
         <div class="petal"></div>
         <div class="petal"></div>
         <div class="petal"></div>
@@ -282,22 +301,22 @@
     <section class="max-w-4xl mx-auto py-8 px-4">
         <h2 class="text-3xl font-semibold mb-6 text-center" data-aos="fade-up">Featured Posts</h2>
         <div id="blogPosts" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <article class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" data-category="tech" data-aos="fade-up">
-                <img src="https://via.placeholder.com/150" alt="Tech Post" class="w-full h-48 object-cover rounded mb-4">
+            <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="tech" data-aos="fade-up">
+                <img src="https://via.placeholder.com/150" alt="Tech Post" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
                 <h3 class="text-2xl font-bold mb-2">Exploring New Tech Trends</h3>
                 <p class="text-gray-500 text-sm mb-4">Posted on July 14, 2025</p>
                 <p class="text-gray-700">Discovering the latest in AI and web development is thrilling! Here's what I learned this week...</p>
                 <a href="tech.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
             </article>
-            <article class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" data-category="travel" data-aos="fade-up" data-aos-delay="100">
-                <img src="https://via.placeholder.com/150" alt="Travel Post" class="w-full h-48 object-cover rounded mb-4">
+            <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="travel" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://via.placeholder.com/150" alt="Travel Post" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
                 <h3 class="text-2xl font-bold mb-2">A Journey Through the Mountains</h3>
                 <p class="text-gray-500 text-sm mb-4">Posted on July 10, 2025</p>
                 <p class="text-gray-700">Exploring serene landscapes and hidden trails was unforgettable. Join me on this adventure!</p>
                 <a href="travel.html" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
             </article>
-            <article class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" data-category="books" data-aos="fade-up" data-aos-delay="200">
-                <img src="https://via.placeholder.com/150" alt="Books Post" class="w-full h-48 object-cover rounded mb-4">
+            <article class="bg-white p-6 rounded-lg shadow-lg transform featured-post-card" data-category="books" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://via.placeholder.com/150" alt="Books Post" class="w-full h-48 object-cover rounded mb-4 lazy-fade-in" loading="lazy">
                 <h3 class="text-2xl font-bold mb-2">Must-Read Novels of 2025</h3>
                 <p class="text-gray-500 text-sm mb-4">Posted on July 5, 2025</p>
                 <p class="text-gray-700">These books captured my heart this year. Dive into my top picks for 2025!</p>
@@ -320,8 +339,15 @@
         <p>© 2025 The Embrowned Lilac. All rights reserved.</p>
     </footer>
 
+    <!-- Back to Top Button -->
+    <button id="backToTopBtn" title="Go to top">
+        &#x2191; <!-- Up arrow character -->
+    </button>
+
     <script>
         AOS.init();
+
+        // Dark Mode Toggle
         const darkModeToggle = document.getElementById('darkModeToggle');
         darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
@@ -330,6 +356,8 @@
         if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
         }
+
+        // Search Bar Functionality
         const searchBar = document.getElementById('searchBar');
         const blogPosts = document.getElementById('blogPosts').children;
         searchBar.addEventListener('input', () => {
@@ -340,10 +368,71 @@
                 post.style.display = title.includes(query) || content.includes(query) ? '' : 'none';
             });
         });
+
+        // Update Analytics
         function updateAnalytics() {
             document.getElementById('totalPosts').textContent = document.querySelectorAll('#blogPosts article').length;
         }
         updateAnalytics();
+
+        // Highlight active navigation link
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentPath = window.location.pathname.split('/').pop(); // e.g., "index.html" or ""
+
+        navLinks.forEach(link => {
+            const linkPath = link.getAttribute('href').split('/').pop();
+            // Handle both "index.html" and root path "" for home
+            if (currentPath === linkPath || (currentPath === '' && linkPath === 'index.html')) {
+                link.classList.add('active');
+            }
+        });
+
+        // Smooth Image Loading (Intersection Observer)
+        document.addEventListener("DOMContentLoaded", function() {
+            const lazyImages = document.querySelectorAll(".lazy-fade-in");
+
+            if ("IntersectionObserver" in window) {
+                let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            let lazyImage = entry.target;
+                            lazyImage.classList.add('is-loaded'); // Trigger fade-in
+                            lazyImageObserver.unobserve(lazyImage);
+                        }
+                    });
+                });
+
+                lazyImages.forEach(function(lazyImage) {
+                    lazyImageObserver.observe(lazyImage);
+                });
+            } else {
+                // Fallback for browsers that don't support Intersection Observer
+                lazyImages.forEach(function(lazyImage) {
+                    lazyImage.classList.add('is-loaded');
+                });
+            }
+        });
+
+        // Back to Top Button Functionality
+        const backToTopBtn = document.getElementById("backToTopBtn");
+
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                backToTopBtn.style.display = "block";
+                backToTopBtn.style.opacity = "1";
+            } else {
+                backToTopBtn.style.opacity = "0";
+                setTimeout(() => {
+                    if (backToTopBtn.style.opacity === "0") {
+                        backToTopBtn.style.display = "none";
+                    }
+                }, 300); // Match transition duration
+            }
+        };
+
+        backToTopBtn.addEventListener("click", function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     </script>
 </body>
 </html>
