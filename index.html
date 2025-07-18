@@ -248,7 +248,7 @@
             transform: translateY(-3px); /* Slight lift on hover */
         }
 
-        /* NEW: Styles and Keyframes for dynamically generated petals */
+        /* Styles and Keyframes for dynamically generated petals */
         @keyframes cursor-petal-fall {
             0% {
                 transform: translateY(0px) rotate(var(--initial-rotate, 0deg)) scale(1);
@@ -528,16 +528,15 @@
             createPetal(x, y);
         });
 
-        // Touch movement listener
+        // Touch movement listener - REMOVED e.preventDefault()
         heroContainer.addEventListener('touchmove', (e) => {
-            // Prevent default scrolling behavior while touching the hero section
-            e.preventDefault();
+            // No e.preventDefault() here, allowing default scrolling
             const rect = heroContainer.getBoundingClientRect();
             const touch = e.touches[0]; // Get the first touch point
             const x = touch.clientX - rect.left;
             const y = touch.clientY - rect.top;
             createPetal(x, y);
-        }, { passive: false }); // Use passive: false to allow preventDefault
+        }); // Removed { passive: false } as preventDefault is no longer called
     </script>
 </body>
 </html>
