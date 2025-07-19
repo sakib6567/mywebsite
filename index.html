@@ -37,7 +37,7 @@
             position: relative;
         }
 
-        /* Styles for the full-screen cloud overlay - Added 3D context */
+        /* Styles for the full-screen cloud overlay */
         #cloud-overlay {
             position: fixed;
             top: 0;
@@ -51,13 +51,13 @@
             align-items: center;
             overflow: hidden; /* Hide cloud overflow */
             pointer-events: all; /* Allow interaction */
-            transition: opacity 2s ease-out; /* Smooth fade out */
+            transition: opacity 0.5s ease-out; /* FASTER FADE OUT for "cutting through" effect */
             cursor: pointer; /* Indicate it's clickable */
-            perspective: 1200px; /* Increased perspective for stronger 3D effect */
+            perspective: 1200px; /* Increased perspective for stronger 3D effect (from checkpoint) */
             transform-style: preserve-3d; /* Ensure children are rendered in 3D space */
         }
 
-        /* Keyframes for individual cloud drifting - Enhanced for more natural 3D movement */
+        /* Keyframes for individual cloud drifting - Enhanced for more natural 3D movement (from checkpoint) */
         @keyframes cloud-drift {
             0% { transform: translate(-100%, 0) scale(1) translateZ(-400px); opacity: 0.8; } /* Start further back */
             25% { transform: translate(-50%, 5%) scale(1.05) translateZ(0px); opacity: 0.85; } /* Move slightly forward */
@@ -66,7 +66,7 @@
             100% { transform: translate(100%, 0) scale(1) translateZ(-400px); opacity: 0.8; } /* End further back */
         }
 
-        /* Styles for individual cloud items - IMPROVED APPEARANCE (Thicker, more conspicuous, with shadow) */
+        /* Styles for individual cloud items - IMPROVED APPEARANCE (Thicker, more conspicuous, with shadow) (from checkpoint) */
         .cloud-item {
             position: absolute;
             /* More complex radial gradient for a cloud-like look */
@@ -77,9 +77,8 @@
             pointer-events: none; /* Don't block clicks/touches on clouds themselves */
             opacity: 0.95; /* Slightly higher base opacity */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Subtle shadow for 3D depth */
-            border: 2px dashed red; /* TEMPORARY: For debugging 3D effect */
         }
-        /* Updated sizes for thicker appearance */
+        /* Updated sizes for thicker appearance (from checkpoint) */
         .cloud-item:nth-child(1) { width: 750px; height: 500px; top: 10%; left: -20%; animation-duration: 45s; animation-delay: 0s; }
         .cloud-item:nth-child(2) { width: 850px; height: 550px; top: 50%; left: -50%; animation-duration: 55s; animation-delay: 10s; }
         .cloud-item:nth-child(3) { width: 650px; height: 450px; top: 70%; left: 10%; animation-duration: 40s; animation-delay: 5s; }
@@ -101,13 +100,6 @@
             z-index: 1;
             min-height: 100vh; /* Ensure it takes full height */
             width: 100vw;
-        }
-
-        /* Removed debugging styles for blog posts container */
-        #blogPosts {
-            /* background-color: orange; */
-            /* border: 5px solid purple; */
-            /* min-height: 300px; */
         }
 
         /* Forced visibility styles for featured post cards */
@@ -161,14 +153,13 @@
             justify-content: center;
         }
 
-        /* Parallax Background Layer - Removed the radial-gradient (circles) */
+        /* Parallax Background Layer */
         .parallax-bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* Only the purple-tree.jpg image now */
             background: #4b5563 url('purple-tree.jpg') no-repeat center center/cover;
             background-attachment: fixed; /* This is the magic for parallax: fixed background attachment */
             z-index: 1; /* Below text, above nothing */
@@ -188,10 +179,10 @@
             100% { background-color: #6F4E37; } /* Distinct brown for petals */
         }
 
-
         /* Petal Animation Styling (for static petals in hero) */
         .petal {
             position: absolute;
+            background-color: #a78bfa; /* Vibrant lilac purple */
             border-radius: 50% 50% 20% 20%; /* Petal-like shape */
             opacity: 0.8;
             /* Apply both movement and the new petal color animations directly */
@@ -444,6 +435,17 @@
             z-index: 5; /* Above nav links */
             animation: nav-burst-petal-animation 0.8s ease-out forwards; /* Fast burst */
         }
+
+        /* Styles for the bird canvas */
+        #birdCanvas {
+            position: absolute; /* Position over the parallax background */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2; /* Below hero-text (z-index: 3) but above parallax-bg (z-index: 1) */
+            pointer-events: none; /* Crucial: allows clicks/scrolls to pass through to elements below */
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans transition-colors duration-300">
@@ -481,6 +483,8 @@
         <!-- Hero Section with Full-Screen Local Purple Tree Image and Petals -->
         <section id="home" class="hero-container text-white text-center">
             <div class="parallax-bg"></div> <!-- Parallax background layer -->
+            <!-- Canvas for the flying bird and its petals -->
+            <canvas id="birdCanvas"></canvas>
             <!-- Static Petals (increased to 20) -->
             <div class="petal"></div>
             <div class="petal"></div>
@@ -563,6 +567,8 @@
     </div> <!-- End of main-content -->
 
     <script>
+        console.log("Script loaded and running."); // Added for debugging
+
         AOS.init(); // Keep AOS initialization for other elements if needed, but removed attributes from articles
 
         // Dark Mode Toggle
@@ -823,7 +829,7 @@
         // Function to trigger the petal burst and fall (Enhanced for full screen spread)
         function triggerPetalBurst() {
             console.log("Triggering petal burst...");
-            const numberOfBurstPetals = 100; // More petals for a dramatic burst
+            const numberOfBurstPetals = 300; // Increased number of petals for a more dramatic burst
 
             for (let i = 0; i < numberOfBurstPetals; i++) {
                 const petal = document.createElement('div');
@@ -843,8 +849,7 @@
 
                 // Randomize burst direction and rotation
                 const angle = Math.random() * 2 * Math.PI; // Full circle
-                // Make distance proportional to screen size to ensure spread across the entire screen
-                const maxDistance = Math.max(window.innerWidth, window.innerHeight) * 0.7;
+                const maxDistance = Math.max(window.innerWidth, window.innerHeight) * 0.7; // Define maxDistance here
                 const distance = Math.random() * maxDistance + 50; // Distance from initial point for burst
 
                 // These are offsets from the initialX, initialY
@@ -898,26 +903,243 @@
         }
 
         // Add event listeners to trigger the intro animation
-        // Use passive listeners for scroll/touch to improve performance
         window.addEventListener('scroll', () => {
-            console.log("Scroll event detected.");
+            console.log("Scroll event detected and starting animation!");
             startIntroAnimation();
-        }, { once: true, passive: true });
+        }, { passive: true });
         window.addEventListener('click', () => {
-            console.log("Click event detected.");
+            console.log("Click event detected and starting animation!");
             startIntroAnimation();
-        }, { once: true });
+        });
         window.addEventListener('touchstart', () => {
-            console.log("Touchstart event detected.");
+            console.log("Touchstart event detected and starting animation!");
             startIntroAnimation();
-        }, { once: true, passive: true });
+        }, { passive: true });
 
         // Ensure main content is hidden on load until animation completes
         document.addEventListener('DOMContentLoaded', () => {
-            mainContent.style.opacity = '0';     // Set opacity to 0
+            mainContent.style.opacity = '0';
             mainContent.style.pointerEvents = 'none';
             console.log("DOM loaded. Main content initially hidden.");
+
+            // Initialize the bird animation after DOM content is loaded
+            initBirdAnimation();
         });
+
+
+        // --- Bird Animation Logic (Canvas) ---
+        const birdCanvas = document.getElementById('birdCanvas');
+        const birdCtx = birdCanvas.getContext('2d');
+        const birds = [];
+        const birdPetals = []; // To manage petals generated by birds
+
+        // Set canvas dimensions to fill the hero container
+        function resizeCanvas() {
+            birdCanvas.width = heroContainer.clientWidth;
+            birdCanvas.height = heroContainer.clientHeight;
+        }
+
+        // Bird constructor function
+        function Bird(x, y, size, speed) {
+            this.x = x;
+            this.y = y;
+            this.size = size; // Base size for the bird
+            this.speed = speed; // Pixels per frame
+            this.wingPhase = 0; // For flapping animation
+            this.wingSpeed = 0.2; // How fast wings flap
+            this.petalSpawnInterval = 5; // Spawn a petal every X frames
+            this.petalCounter = 0;
+            this.color = '#888888'; // Changed to a slightly darker gray
+        }
+
+        Bird.prototype.draw = function() {
+            const ctx = birdCtx;
+            ctx.save();
+            ctx.translate(this.x, this.y);
+
+            // Calculate wing position based on sine wave for flapping
+            const wingFlap = Math.sin(this.wingPhase) * (this.size / 5); // Reduced flap amplitude for smoother motion
+
+            // Body (more streamlined, slightly curved)
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.moveTo(this.size * 0.5, 0); // Tail end (right side of body)
+            ctx.bezierCurveTo(
+                this.size * 0.3, -this.size * 0.25,  // Control point 1 (upper back curve)
+                -this.size * 0.6, -this.size * 0.25, // Control point 2 (upper front curve)
+                -this.size * 0.8, -this.size * 0.1 // Neck/head connection (left side of body)
+            );
+            ctx.bezierCurveTo(
+                -this.size * 0.6, this.size * 0.25,  // Control point 3 (lower front curve)
+                this.size * 0.3, this.size * 0.25,   // Control point 4 (lower back curve)
+                this.size * 0.5, 0 // Back to tail end
+            );
+            ctx.fill();
+
+            // Head (small, round)
+            ctx.beginPath();
+            ctx.arc(-this.size * 0.85, -this.size * 0.15, this.size * 0.15, 0, Math.PI * 2); // Slightly adjusted position
+            ctx.fill();
+
+            // Beak (small, pointed)
+            ctx.fillStyle = '#FFD700'; // Gold
+            ctx.beginPath();
+            ctx.moveTo(-this.size * 0.95, -this.size * 0.15); // Adjusted position
+            ctx.lineTo(-this.size * 1.05, -this.size * 0.1); // Adjusted position
+            ctx.lineTo(-this.size * 0.95, -this.size * 0.05); // Adjusted position
+            ctx.fill();
+
+            // Eye (small dot)
+            ctx.fillStyle = '#000000'; // Black
+            ctx.beginPath();
+            ctx.arc(-this.size * 0.8, -this.size * 0.2, this.size * 0.03, 0, Math.PI * 2); // Adjusted position
+            ctx.fill();
+
+            // Tail feathers (more distinct, fanned out)
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.moveTo(this.size * 0.5, 0); // Base of the tail
+            ctx.lineTo(this.size * 0.65, -this.size * 0.15); // Top feather tip (adjusted)
+            ctx.lineTo(this.size * 0.7, -this.size * 0.05); // Middle top feather tip (adjusted)
+            ctx.lineTo(this.size * 0.7, this.size * 0.05); // Middle bottom feather tip (adjusted)
+            ctx.lineTo(this.size * 0.65, this.size * 0.15); // Bottom feather tip (adjusted)
+            ctx.closePath();
+            ctx.fill();
+
+            // Wings (Simplified for a "checkpoint" revert)
+            ctx.fillStyle = this.color;
+            // Top Wing
+            ctx.beginPath();
+            ctx.moveTo(this.size * 0.1, -this.size * 0.1); // Start point on the body
+            ctx.bezierCurveTo(
+                -this.size * 0.2, -this.size * 0.6 - wingFlap, // Control point 1 (outwards and upwards)
+                -this.size * 0.8, -this.size * 0.5 - wingFlap, // Control point 2 (further out, slightly higher)
+                -this.size * 0.7, -this.size * 0.1 // End point of the wing (more horizontal)
+            );
+            ctx.lineTo(this.size * 0.1, -this.size * 0.1); // Back to anchor
+            ctx.fill();
+
+            // Bottom Wing (mirrored, but adjusted for flap)
+            ctx.beginPath();
+            ctx.moveTo(this.size * 0.1, this.size * 0.1); // Start point on the body
+            ctx.bezierCurveTo(
+                -this.size * 0.2, this.size * 0.6 + wingFlap, // Control point 1 (outwards and downwards)
+                -this.size * 0.8, this.size * 0.5 + wingFlap, // Control point 2 (further out, slightly lower)
+                -this.size * 0.7, this.size * 0.1 // End point of the wing (more horizontal)
+            );
+            ctx.lineTo(this.size * 0.1, this.size * 0.1); // Back to anchor
+            ctx.fill();
+
+            ctx.restore();
+        };
+
+        Bird.prototype.update = function() {
+            this.x -= this.speed; // Move right to left
+            this.wingPhase += this.wingSpeed; // Update wing phase
+
+            this.petalCounter++;
+            if (this.petalCounter >= this.petalSpawnInterval) {
+                this.petalCounter = 0;
+                // Spawn a petal at the bird's tail (which is now at positive X relative to its center)
+                birdPetals.push(new BirdPetal(this.x + this.size * 0.8, this.y + Math.random() * this.size * 0.2 - this.size * 0.1));
+            }
+        };
+
+        // Bird Petal constructor function
+        function BirdPetal(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * (6 - 3) + 3; // Smaller petals
+            this.opacity = 0.8;
+            this.fallSpeed = Math.random() * (1.5 - 0.5) + 0.5;
+            this.swaySpeed = Math.random() * 0.05;
+            this.swayAmplitude = Math.random() * 10 + 5;
+            this.rotation = Math.random() * 360;
+            this.rotationSpeed = Math.random() * 5 - 2.5; // Can rotate both ways
+            this.color = 'rgba(120, 80, 180, 0.8)'; // Darker lilac/purple
+        }
+
+        BirdPetal.prototype.draw = function() {
+            const ctx = birdCtx;
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation * Math.PI / 180);
+            ctx.globalAlpha = this.opacity;
+            ctx.fillStyle = this.color;
+
+            // Draw petal shape (simple ellipse for canvas)
+            ctx.beginPath();
+            ctx.ellipse(0, 0, this.size, this.size * 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        };
+
+        BirdPetal.prototype.update = function() {
+            this.y += this.fallSpeed;
+            this.x += Math.sin(this.y * this.swaySpeed) * this.swayAmplitude * 0.01; // Gentle sway
+            this.opacity -= 0.005; // Fade out
+            this.rotation += this.rotationSpeed;
+        };
+
+        // Animation loop for birds and petals
+        function animateBirds() {
+            birdCtx.clearRect(0, 0, birdCanvas.width, birdCanvas.height); // Clear canvas
+
+            // Update and draw birds
+            for (let i = birds.length - 1; i >= 0; i--) {
+                const bird = birds[i];
+                bird.update();
+                bird.draw();
+
+                // Remove birds that have flown off-screen (right to left)
+                if (bird.x + bird.size < 0) {
+                    birds.splice(i, 1);
+                }
+            }
+
+            // Update and draw petals
+            for (let i = birdPetals.length - 1; i >= 0; i--) {
+                const petal = birdPetals[i];
+                petal.update();
+                petal.draw();
+
+                // Remove petals that have fallen off-screen or faded out
+                if (petal.y > birdCanvas.height || petal.opacity <= 0) {
+                    birdPetals.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animateBirds);
+        }
+
+        // Function to spawn a new bird
+        function spawnBird() {
+            const randomY = Math.random() * (birdCanvas.height * 0.6) + (birdCanvas.height * 0.1); // Spawn in top 60% of canvas
+            const randomSize = Math.random() * (30 - 20) + 20; // Bird size between 20 and 30
+            const randomSpeed = Math.random() * (2 - 1) + 1; // Bird speed between 1 and 2
+            birds.push(new Bird(birdCanvas.width + randomSize, randomY, randomSize, randomSpeed)); // Start from right, off-screen
+        }
+
+        // Initialize bird animation
+        function initBirdAnimation() {
+            if (!birdCanvas || !birdCtx) {
+                console.error("Bird canvas or context not found.");
+                return;
+            }
+
+            resizeCanvas(); // Set initial canvas size
+            window.addEventListener('resize', resizeCanvas); // Resize canvas on window resize
+
+            // Start the animation loop
+            animateBirds();
+
+            // Spawn the first bird immediately
+            spawnBird();
+
+            // Set interval to spawn new birds every 10 seconds
+            setInterval(spawnBird, 10000); // 10 seconds
+        }
 
     </script>
 </body>
